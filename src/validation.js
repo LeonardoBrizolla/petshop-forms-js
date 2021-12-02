@@ -1,9 +1,16 @@
-const birthDate = document.querySelector('[data-input-nascimento]');
-birthDate.addEventListener('blur', (event) =>
-  verificationBirthDate(event.target)
-);
+export function validation(input) {
+  const typeOfInput = input.dataset.type;
 
-function verificationBirthDate(inputDate) {
+  if (validators[typeOfInput]) {
+    validators[typeOfInput](input);
+  }
+}
+
+const validators = {
+  birthDate: (input) => validationBirthDate(input),
+};
+
+function validationBirthDate(inputDate) {
   const birthDate = new Date(inputDate.value);
   let message = '';
 
