@@ -38,10 +38,15 @@ const errorMessage = {
     valueMissing: 'O campo de data de nascimento não pode estar vazio.',
     customError: 'Não é permitido se cadastrar pessoas maiores de 18 anos!',
   },
+  cpf: {
+    valueMissing: 'O campo de CPF não pode estar vazio',
+    customError: 'O CPF digitado não é válido',
+  },
 };
 
 const validators = {
   birthDate: (input) => validationBirthDate(input),
+  cpf: (input) => checkCPF(input),
 };
 
 function showMessageError(typeOfInput, input) {
@@ -75,4 +80,36 @@ function isOver18(birthDate) {
   );
 
   return birthDatePlus18 <= currentDate;
+}
+
+// CPF
+function checkCPF(input) {
+  const cpfFormatted = input.value.replace(/\D/g, '');
+  let message = '';
+
+  if (!checkRepeatedCPF(cpfFormatted)) message = 'O CPF digitado não é válido';
+
+  input.setCustomValidity(message);
+}
+
+function checkRepeatedCPF(cpf) {
+  const repeatedValues = [
+    '00000000000',
+    '11111111111',
+    '22222222222',
+    '33333333333',
+    '44444444444',
+    '55555555555',
+    '66666666666',
+    '77777777777',
+    '88888888888',
+    '99999999999',
+  ];
+  let cpfValid = true;
+
+  repeatedValues.forEach((value) => {
+    if (value === cpf) cpfValid = false;
+  });
+
+  return cpfValid;
 }
