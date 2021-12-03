@@ -113,3 +113,13 @@ function checkRepeatedCPF(cpf) {
 
   return cpfValid;
 }
+
+function checkStructureCPF(cpf) {
+  const multiplier = 10;
+
+  return checkVerifierDigit(cpf, multiplier);
+}
+
+function confirmDigit(sum) {
+  return 11 - (sum % 11);
+}
