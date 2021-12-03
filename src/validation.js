@@ -4,11 +4,57 @@ export function validation(input) {
   if (validators[typeOfInput]) {
     validators[typeOfInput](input);
   }
+
+  if (input.validity.valid) {
+    input.parentElement.classList.remove('input-container--invalido');
+    input.parentElement.querySelector('.input-mensagem-erro').innerHTML = '';
+  } else {
+    input.parentElement.classList.add('input-container--invalido');
+    input.parentElement.querySelector('.input-mensagem-erro').innerHTML =
+      showMessageError(typeOfInput, input);
+  }
 }
+
+const typeOfErrors = [
+  'valueMissing',
+  'typeMismatch',
+  'patternMismatch',
+  'customError',
+];
+
+const errorMessage = {
+  name: {
+    valueMissing: 'O campo nome não pode estar vazio.',
+  },
+  email: {
+    valueMissing: 'O campo de email não pode estar vazio.',
+    typeMismatch: 'E-mail digitado não é válido',
+  },
+  password: {
+    valueMissing: 'O campo de senha não pode estar vazio.',
+    patternMismatch: 'Minimo 8 caracteres, e ao menos uma letra e um numero',
+  },
+  birthDate: {
+    valueMissing: 'O campo de data de nascimento não pode estar vazio.',
+    customError: 'Não é permitido se cadastrar pessoas maiores de 18 anos!',
+  },
+};
 
 const validators = {
   birthDate: (input) => validationBirthDate(input),
 };
+
+function showMessageError(typeOfInput, input) {
+  let message = '';
+
+  typeOfErrors.forEach((typeError) => {
+    if (input.validity[typeError]) {
+      message = errorMessage[typeOfInput][typeError];
+    }
+  });
+
+  return message;
+}
 
 function validationBirthDate(inputDate) {
   const birthDate = new Date(inputDate.value);
