@@ -87,7 +87,8 @@ function checkCPF(input) {
   const cpfFormatted = input.value.replace(/\D/g, '');
   let message = '';
 
-  if (!checkRepeatedCPF(cpfFormatted)) message = 'O CPF digitado não é válido';
+  if (!checkRepeatedCPF(cpfFormatted) || !checkStructureCPF(cpfFormatted))
+    message = 'O CPF digitado não é válido';
 
   input.setCustomValidity(message);
 }
@@ -120,6 +121,27 @@ function checkStructureCPF(cpf) {
   return checkVerifierDigit(cpf, multiplier);
 }
 
+function checkVerifierDigit(cpf, multiplier) {
+  if (multiplier >= 12) return true;
+
+  let startMultiplier = multiplier;
+  let sum = 0;
+  const cpfWithoutDigit = cpf.substr(0, multiplier - 1).split('');
+  const verifierDigit = cpf.charAt(multiplier - 1);
+
+  for (let i = 0; startMultiplier > 1; startMultiplier--) {
+    sum = sum + cpfWithoutDigit[i] * startMultiplier;
+    i++;
+  }
+
+  if (verifierDigit == confirmDigit(sum)) {
+    return checkVerifierDigit(cpf, multiplier + 1);
+  }
+
+  return false;
+}
+
 function confirmDigit(sum) {
   return 11 - (sum % 11);
 }
+// Correct: 43296219838 //11
