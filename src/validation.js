@@ -56,6 +56,9 @@ const errorMessage = {
   estado: {
     valueMissing: 'O campo estado não pode estar vazio.',
   },
+  amount: {
+    valueMissing: 'O campo preço não pode estar vazio.',
+  },
 };
 
 const validators = {
@@ -76,6 +79,7 @@ function showMessageError(typeOfInput, input) {
   return message;
 }
 
+// BIRTHDAY
 function validationBirthDate(inputDate) {
   const birthDate = new Date(inputDate.value);
   let message = '';
@@ -162,8 +166,7 @@ function confirmDigit(sum) {
 
 // CEP
 function recoveryCEP(input) {
-  const cep = input.value;
-  const cepFormatted = cep.replace(/\D/g, ''); // /\D/g, '' substitui tudo que nao for numeros por nada
+  const cepFormatted = input.value.replace(/\D/g, ''); // /\D/g, '' substitui tudo que nao for numeros por nada
   const url = `https://viacep.com.br/ws/${cepFormatted}/json/`;
   const options = {
     method: 'GET',
