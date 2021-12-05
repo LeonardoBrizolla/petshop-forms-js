@@ -28,32 +28,33 @@ const errorMessage = {
   },
   email: {
     valueMissing: 'O campo de email não pode estar vazio.',
-    typeMismatch: 'E-mail digitado não é válido',
+    typeMismatch: 'E-mail digitado não é válido.',
   },
   password: {
     valueMissing: 'O campo de senha não pode estar vazio.',
-    patternMismatch: 'Minimo 8 caracteres, e ao menos uma letra e um numero',
+    patternMismatch: 'Minimo 8 caracteres, e ao menos uma letra e um numero.',
   },
   birthDate: {
     valueMissing: 'O campo de data de nascimento não pode estar vazio.',
     customError: 'Não é permitido se cadastrar pessoas maiores de 18 anos!',
   },
   cpf: {
-    valueMissing: 'O campo de CPF não pode estar vazio',
-    customError: 'O CPF digitado não é válido',
+    valueMissing: 'O campo de CPF não pode estar vazio.',
+    customError: 'O CPF digitado não é válido.',
   },
   cep: {
-    valueMissing: 'O campo de CEP não pode estar vazio',
-    patternMismatch: 'O CEP digitado não é válido',
+    valueMissing: 'O campo de CEP não pode estar vazio.',
+    patternMismatch: 'O CEP digitado não é válido.',
+    customError: 'Não foi possível buscar o CEP.',
   },
   logradouro: {
-    valueMissing: 'O campo logradouro não pode estar vazio',
+    valueMissing: 'O campo logradouro não pode estar vazio.',
   },
   cidade: {
-    valueMissing: 'O campo cidade não pode estar vazio',
+    valueMissing: 'O campo cidade não pode estar vazio.',
   },
   estado: {
-    valueMissing: 'O campo estado não pode estar vazio',
+    valueMissing: 'O campo estado não pode estar vazio.',
   },
 };
 
@@ -176,7 +177,23 @@ function recoveryCEP(input) {
     fetch(url, options)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        if (data.erro) {
+          input.setCustomValidity('Não foi possível buscar o CEP.');
+          return;
+        }
+        input.setCustomValidity('');
+        fillBoxesWithCEP(data);
+        return;
       });
   }
+}
+
+function fillBoxesWithCEP(data) {
+  const logradouro = document.querySelector('[data-type="logradouro"]');
+  const cidade = document.querySelector('[data-type="cidade"]');
+  const estado = document.querySelector('[data-type="estado"]');
+
+  logradouro.value = data.logradouro;
+  cidade.value = data.localidade;
+  estado.value = data.uf;
 }
